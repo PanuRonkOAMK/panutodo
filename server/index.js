@@ -1,8 +1,8 @@
 import express from 'express'
 import cors from 'cors'
-import todoRouter from './routers/todoRouter.js'
+import todoRouter from './routes/todoRouter.js'
 
-const port = process.env.port
+const port = process.env.PORT
 
 const app = express()
 app.use(cors())
@@ -21,3 +21,5 @@ app.use((err,req,res,next) => {
         }
     })
 })
+
+app.listen(port, () => console.log(`Server running on port ${port}`))

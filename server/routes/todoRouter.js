@@ -3,14 +3,6 @@ import { Router } from 'express'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-    pool.query('SELECT * FROM task', (err, result) => {
-        if (err) {
-            return res.status(500).json({error: err.message})
-        }
-        res.status(200).json(result.rows)
-    })
-})
 router.get('/', (req, res, next) => {
     pool.query('SELECT * FROM task', (err, result) => {
         if (err) {
@@ -20,13 +12,13 @@ router.get('/', (req, res, next) => {
     })
 })
 // Other routes (create, delete) here
-router.get('/create', (req, res) => {
+router.post('/create', (req, res, next) => {
  const { task } = req.body
 
  if (!task) {
     const error = new Error('Task not found')
     error.status = 404
-    return next (err)
+    return next (error)
  }
 
  pool.query('insert into task (description) values ($1) returning *', [task.description],
@@ -34,7 +26,7 @@ router.get('/create', (req, res) => {
         if (err) {
             return next (err)
         }
-        res.status(201).json({id: result.rows[0].id, description: task.description})
+        res.status(201).json({id: result.rows[0].id, description: task.description});
     })
 })
 
